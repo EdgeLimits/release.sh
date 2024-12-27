@@ -206,7 +206,12 @@ generate_changelog() {
     previous_tag=$tag
   done
 
-  generate_sub_section_group "$(git log --oneline $(git rev-list --max-parents=0 HEAD)..$previous_tag^)" $previous_tag
+  first_commit=$(git rev-list --max-parents=0 HEAD)
+  if [ "$previous_tag" != "$first_commit" ]; then
+    generate_sub_section_group "$(git log --oneline $first_commit..$previous_tag)" $previous_tag
+  else
+    generate_sub_section_group "$(git log --oneline $first_commit)" "Initial Commit"
+  fi
 
   if [[ "$DRYRUN" -eq 0 ]]; then
     echo "$output" >"$CHANGELOG_FILE"
