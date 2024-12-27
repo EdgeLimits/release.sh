@@ -3,8 +3,8 @@
 BRANCH_RELEASE="main"
 BRANCH_WORKING="main"
 REMOTE="origin"
-PROJECT_URL=""    # https://github.com/Example/project/issues/
-REPOSITORY_URL="" # https://github.com/Example/project/
+PROJECT_URL=""
+REPOSITORY_URL="https://github.com/EdgeLimits/release.sh"
 CHANGELOG_FILE="CHANGELOG.md"
 CHANGELOG_COMMIT_MESSAGE="docs: update CHANGELOG.md"
 VERSION_FILES=("version.txt")
@@ -38,11 +38,6 @@ check_config() {
 
   if [[ -z "$REPOSITORY_URL" ]]; then
     echo "ERROR: REPOSITORY_URL is not set. Please configure the script."
-    exit 1
-  fi
-
-  if [[ -z "$PROJECT_URL" ]]; then
-    echo "ERROR: PROJECT_URL is not set. Please configure the script."
     exit 1
   fi
 
@@ -177,7 +172,7 @@ generate_changelog() {
     local log="$3"
 
     section=$(echo "$log" | grep "$keyword(\|$keyword:" |
-      sed -E -e "s|#([0-9]+)|[#\1](${PROJECT_URL}\1)|g" \
+      sed -E -e "s|#([0-9]+)|$(if [[ -n "$PROJECT_URL" ]]; then echo "[#\1](${PROJECT_URL}\1)"; else echo "#\1"; fi)|g" \
         -e "s|^([a-f0-9]{7,40}) (.+)$|* \2 [\1](${REPOSITORY_URL}commit/\1)|")
     if [[ -n "$section" ]]; then
       output+=$(printf "### %s\n\n" "$title")
