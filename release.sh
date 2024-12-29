@@ -173,7 +173,7 @@ generate_changelog() {
 
     section=$(echo "$log" | grep "$keyword(\|$keyword:" |
       sed -E -e "s|#([0-9]+)|$(if [[ -n "$PROJECT_URL" ]]; then echo "[#\1](${PROJECT_URL}\1)"; else echo "#\1"; fi)|g" \
-        -e "s|^([a-f0-9]{7,40}) (.+)$|* \2 [\1](${REPOSITORY_URL}commit/\1)|")
+        -e "s|^([a-f0-9]{7,40}) (.+)$|* \2 [\1](${REPOSITORY_URL}/commit/\1)|")
     if [[ -n "$section" ]]; then
       output+=$(printf "### %s\n\n" "$title")
       output+=$"\n\n"
