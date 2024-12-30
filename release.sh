@@ -1,16 +1,23 @@
 #!/bin/bash
 
+# ======================================== #
+# =============== RELEASE.sh ============= #
+# ======================================== #
+
 BRANCH_RELEASE="releases"
 BRANCH_WORKING="dev"
 REMOTE="origin"
-PROJECT_URL="https://github.com/EdgeLimits/release.sh/issues"
 REPOSITORY_URL="https://github.com/EdgeLimits/release.sh"
+PROJECT_URL="https://github.com/EdgeLimits/release.sh/issues"
+PROJECT_REFERENCE_LOCATION="branch" # branch, commit
 CHANGELOG_FILE="CHANGELOG.md"
 CHANGELOG_COMMIT_MESSAGE="docs: update CHANGELOG.md"
 VERSION_FILES=("version.txt")
 VERSION_TYPE="patch"
 DRYRUN="0"
 RUNSILENT="0"
+
+# ======================================== #
 
 while [[ "$#" -gt 0 ]]; do
   case $1 in
@@ -23,6 +30,8 @@ while [[ "$#" -gt 0 ]]; do
   esac
   shift
 done
+
+# ======================================== #
 
 conditional_echo() {
   if [[ "$RUNSILENT" -eq 0 ]]; then
@@ -172,8 +181,31 @@ generate_changelog() {
     local log="$3"
 
     section=$(echo "$log" | grep "$keyword(\|$keyword:" |
-      sed -E -e "s|#([0-9]+)|$(if [[ -n "$PROJECT_URL" ]]; then echo "[#\1](${PROJECT_URL}/\1)"; else echo "#\1"; fi)|g" \
-        -e "s|^([a-f0-9]{7,40}) (.+)$|* \2 [\1](${REPOSITORY_URL}/commit/\1)|")
+      while read -r line; do
+        commit_hash=$(echo "$line" | grep -oE "^[a-f0-9]{7,40}")
+        commit_message=$(echo "$line" | sed -E "s/^[a-f0-9]{7,40} (\(.*\))? *(.*)/\2/")
+
+        if [[ "$PROJECT_REFERENCE_LOCATION" == "branch" ]]; then
+          decorator=$(echo "$line" | sed -n 's/.*(\(.*\)).*/\1/p')
+          filtered_decorator=$(echo "$decorator" | sed 's/tag:[^,]*, //g')
+          issue_ref=$(echo "$filtered_decorator" | grep -o '#[0-9]\+' | head -n 1)
+        elif [[ "$PROJECT_REFERENCE_LOCATION" == "commit" ]]; then
+          issue_ref=$(echo "$commit_message" | grep -o "#[0-9]\+")
+        else
+          issue_ref=""
+        fi
+
+        if [[ -n "$PROJECT_URL" && -n "$issue_ref" ]]; then
+          issue_number=$(echo "$issue_ref" | sed 's/#//')
+          issue_link="[#$issue_number](${PROJECT_URL}/$issue_number)"
+        else
+          issue_link="$issue_ref"
+        fi
+
+        printf "* %s %s [%s](${REPOSITORY_URL}/commit/%s)\n" \
+          "$issue_link" "$commit_message" "$commit_hash" "$commit_hash"
+      done)
+
     if [[ -n "$section" ]]; then
       output+=$(printf "### %s\n\n" "$title")
       output+=$"\n\n"
@@ -198,19 +230,19 @@ generate_changelog() {
   for tag in "${tags[@]}"; do
     if [ -n "$previous_tag" ]; then
       range="$tag...$previous_tag"
-      generate_sub_section_group "$(git log --oneline $range)" $previous_tag
+      generate_sub_section_group "$(git log --oneline --decorate $range)" $previous_tag
     else
       range="$tag..HEAD"
-      generate_sub_section_group "$(git log --oneline $range)" $NEWTAG
+      generate_sub_section_group "$(git log --oneline --decorate $range)" $NEWTAG
     fi
     previous_tag=$tag
   done
 
   first_commit=$(git rev-list --max-parents=0 HEAD)
   if [ "$previous_tag" != "$first_commit" ]; then
-    generate_sub_section_group "$(git log --oneline $first_commit..$previous_tag)" $previous_tag
+    generate_sub_section_group "$(git log --oneline --decorate $first_commit..$previous_tag)" $previous_tag
   else
-    generate_sub_section_group "$(git log --oneline $first_commit)" "Initial Commit"
+    generate_sub_section_group "$(git log --oneline --decorate $first_commit)" "Initial Commit"
   fi
 
   if [[ "$DRYRUN" -eq 0 ]]; then
@@ -301,9 +333,9 @@ merge_branches() {
   fi
 }
 
-# ==================== #
-# ==== RELEASE.sh ==== #
-# ==================== #
+# ======================================== #
+# ============ RELEASE.sh ================ #
+# ======================================== #
 
 # Check if the necessary tools are installed and the configuration is correct
 check_config
