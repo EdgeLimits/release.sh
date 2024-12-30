@@ -1,10 +1,27 @@
 # Changelog
 
+## Version v0.0.3
+
+### Features
+
+*  feat: project task/issue number referencing from commit message or branch [465f82d](https://github.com/EdgeLimits/release.sh/commit/465f82d)
+* [#1](https://github.com/EdgeLimits/release.sh/issues/1) feat: separating dev from release [446a628](https://github.com/EdgeLimits/release.sh/commit/446a628)
+
+### Bug fixes
+
+*  fix: fixing commit reference url path [b92d4f9](https://github.com/EdgeLimits/release.sh/commit/b92d4f9)
+
+ --- 
+
 ## Version v0.0.2
 
 ### Misc updates
 
-* chore: making it possible to handle initial commits [43da8b6](https://github.com/EdgeLimits/release.shcommit/43da8b6)
+*  chore: making it possible to handle initial commits [43da8b6](https://github.com/EdgeLimits/release.sh/commit/43da8b6)
+
+### Documentations
+
+*  docs: update CHANGELOG.md [28561b8](https://github.com/EdgeLimits/release.sh/commit/28561b8)
 
  --- 
 
@@ -12,13 +29,13 @@
 
 ### Features
 
-* feat: possible to commit without PROJECT_URL [ef6df1b](https://github.com/EdgeLimits/release.shcommit/ef6df1b)
-* feat: adding release.sh script to the project [39dd05c](https://github.com/EdgeLimits/release.shcommit/39dd05c)
+*  feat: possible to commit without PROJECT_URL [ef6df1b](https://github.com/EdgeLimits/release.sh/commit/ef6df1b)
+*  feat: adding release.sh script to the project [39dd05c](https://github.com/EdgeLimits/release.sh/commit/39dd05c)
 
 ### Documentations
 
-* docs: update CHANGELOG.md [e1662aa](https://github.com/EdgeLimits/release.shcommit/e1662aa)
-* docs: basic setup instructions [92a711e](https://github.com/EdgeLimits/release.shcommit/92a711e)
+*  docs: update CHANGELOG.md [e1662aa](https://github.com/EdgeLimits/release.sh/commit/e1662aa)
+*  docs: basic setup instructions [92a711e](https://github.com/EdgeLimits/release.sh/commit/92a711e)
 
  --- 
 
