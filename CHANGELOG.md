@@ -1,5 +1,13 @@
 # Changelog
 
+## Version v0.1.0
+
+### Documentations
+
+* [#2](https://github.com/EdgeLimits/release.sh/issues/2) docs: release.sh usage documentation [df5df67](https://github.com/EdgeLimits/release.sh/commit/df5df67)
+
+ --- 
+
 ## Version v0.0.3
 
 ### Features
@@ -10,6 +18,10 @@
 ### Bug fixes
 
 *  fix: fixing commit reference url path [b92d4f9](https://github.com/EdgeLimits/release.sh/commit/b92d4f9)
+
+### Documentations
+
+*  docs: update CHANGELOG.md [165369e](https://github.com/EdgeLimits/release.sh/commit/165369e)
 
  --- 
 
